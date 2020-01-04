@@ -1,22 +1,50 @@
-import React, { ReactNode } from 'react';
+import React from 'react';
 import Head from 'next/head'
-import {Request} from 'express';
-import DefaultApp, { Container } from 'next/app';
+import { Request } from 'express';
+import DefaultApp from 'next/app';
+import { NextComponentType, NextPageContext } from 'next';
 
+declare type RequestType = Request & { csrfToken: Function }
+//@todo check if both csrf token element (__NEXT_DATA__ property and HTML meta tag) are required
+//@todo check if getInitialProps slows down page speed and disables static optimization completely
 class App extends DefaultApp<{
-  req: Request
+  csrfToken: string
 }> {
-    render() {
-        const { Component, pageProps, req } = this.props;
-        return (
-            <Container>
-                <Head>
-                    <meta name="csrf-token" content={req.csrfToken()}/>
-                </Head>
-                <Component {...pageProps} />
-            </Container>
-        );
+  static async getInitialProps({ Component, router, ctx }: { Component: NextComponentType<NextPageContext, {}, {}>, ctx: NextPageContext, router: any}) {
+    let pageProps = {}
+
+    if (Component.getInitialProps) {
+      pageProps = await Component.getInitialProps(ctx)
     }
+
+    let props:{ csrfToken? : string } = {};
+
+    if(typeof ctx.req !== typeof undefined) {
+      props.csrfToken = (ctx.req as RequestType).csrfToken();
+    }
+
+    return { pageProps, ...props }
+  }
+  render() {
+    const { Component, pageProps, csrfToken } = this.props;
+    const isBrowser = typeof window !== 'undefined';
+
+    if(isBrowser || typeof csrfToken === typeof undefined) {
+      return (
+        <div>
+          <Component {...pageProps} />
+        </div>
+      );
+    }
+    return (
+      <div>
+        <Head>
+          <meta name="csrf-token" content={csrfToken}/>
+        </Head>
+        <Component {...pageProps} />
+      </div>
+    );
+  }
 }
 
 export default App;

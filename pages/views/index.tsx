@@ -1,8 +1,8 @@
 import * as React from 'react';
 import Head from 'next/head';
 import Nav from '../../components/nav';
-import Page from '../../layouts/page';
-const Home = () => (
+
+const Home = () => {console.log("easd");return(
   <div>
     <Head>
       <title>Home</title>
@@ -83,6 +83,6 @@ const Home = () => (
       }
     `}</style>
     </div>
-)
+)}
 
 export default Home
