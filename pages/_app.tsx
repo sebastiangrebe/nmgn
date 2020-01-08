@@ -3,14 +3,17 @@ import Head from 'next/head'
 import { Request } from 'express';
 import DefaultApp from 'next/app';
 import { NextComponentType, NextPageContext } from 'next';
+import { ApolloProvider } from '@apollo/react-hooks';
+import withApollo from '../lib/withApollo';
 
 declare type RequestType = Request & { csrfToken: Function }
 //@todo check if both csrf token element (__NEXT_DATA__ property and HTML meta tag) are required
 //@todo check if getInitialProps slows down page speed and disables static optimization completely
 class App extends DefaultApp<{
-  csrfToken: string
+  csrfToken: string,
+  apollo: any
 }> {
-  static async getInitialProps({ Component, router, ctx }: { Component: NextComponentType<NextPageContext, {}, {}>, ctx: NextPageContext, router: any}) {
+  static async getInitialProps({ Component, router, ctx }: { Component: NextComponentType<NextPageContext, {}, {}>, ctx: NextPageContext, router: any }) {
     let pageProps = {}
 
     if (Component.getInitialProps) {
@@ -26,7 +29,7 @@ class App extends DefaultApp<{
     return { pageProps, ...props }
   }
   render() {
-    const { Component, pageProps, csrfToken } = this.props;
+    const { Component, pageProps, csrfToken, apollo } = this.props;
     const isBrowser = typeof window !== 'undefined';
 
     if(isBrowser || typeof csrfToken === typeof undefined) {
@@ -41,10 +44,12 @@ class App extends DefaultApp<{
         <Head>
           <meta name="csrf-token" content={csrfToken}/>
         </Head>
-        <Component {...pageProps} />
+        <ApolloProvider client={apollo}>
+          <Component {...pageProps} />
+        </ApolloProvider>
       </div>
     );
   }
 }
 
-export default App;
+export default withApollo(App);
