@@ -30,7 +30,7 @@ async function bootstrap() {
 
   // Custom RenderModule provided by nest-next NPM package
   const renderer = server.get(RenderModule);
-  renderer.register(server, app);
+  renderer.register(server, app, { dev, viewsDir: null });
 
   // Get the RenderService (NestJS Wrapper)
   const service = server.get(RenderService);
