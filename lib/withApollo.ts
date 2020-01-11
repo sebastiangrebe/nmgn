@@ -8,7 +8,7 @@ export default withApollo(
         new ApolloClient({
             cache: new InMemoryCache().restore(initialState || {}),
             link: new HttpLink({
-                uri: '/graphql',
+                uri: 'https://nmgn.azurewebsites.net/graphql',
             })
         })
 )
