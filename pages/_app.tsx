@@ -35,7 +35,9 @@ class App extends DefaultApp<{
     if(isBrowser || typeof csrfToken === typeof undefined) {
       return (
         <div>
-          <Component {...pageProps} />
+          <ApolloProvider client={apollo}>
+            <Component {...pageProps} />
+          </ApolloProvider>
         </div>
       );
     }
