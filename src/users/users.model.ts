@@ -1,4 +1,5 @@
 import { Field, ID, ObjectType } from 'type-graphql';
+import { buildSchema } from '@typegoose/typegoose';
 
 /**
  * TypeScript User class
@@ -14,5 +15,6 @@ export class User {
 
   @Field()
   password?: string;
-
 }
+
+export const UserSchema = buildSchema(User);
