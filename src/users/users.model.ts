@@ -5,20 +5,19 @@ import { buildSchema, prop, modelOptions, getModelForClass } from '@typegoose/ty
  * TypeScript User class
  * Uses decorators from type-graphql package to allow automatic generation of GraphQL schema
  */
-@modelOptions({ schemaOptions: {} })
+@modelOptions({ schemaOptions: { timestamps: true } })
 @ObjectType()
 export class User {
   @prop()
-  @Field(type => ID)
+  @Field(() => ID)
   _id!: string|number;
 
-  @prop()
+  @prop({ required: true })
   @Field()
   username!: string;
 
-  @prop()
-  @Field()
-  password?: string;
+  @prop({ required: true })
+  password!: string;
 }
 
 export const UserModel = getModelForClass(User);

@@ -8,7 +8,7 @@ export class AuthResolver {
   constructor() {}
 
   // Retrieve currently logged in user
-  @Query(() => String)
+  @Query(() => User)
   @UseGuards(GqlAuthGuard)
   async currentUser(@CurrentUser() user: User
   ) {
