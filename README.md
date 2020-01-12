@@ -21,6 +21,21 @@ cd nmgn
 yarn
 yarn dev (for development)
 ```
+
+### Deployment
+I will provide details how to deploy nmgn very soon!
+It is pretty much just running yarn build and then yarn start while setting the correct environment variables.
+Furthermore I will provide a Dockerfile and a sample configuration for Azure App Service.
+
+### Authentication
+The authentication of requests works using the standardized JWT flow.
+You can test it by setting up a "users" collection with a user containing an _id, username and password.
+Important is that the whole authentication flow ensures the it is not open to CSRF attacks by still offering SSR with Next.js.
+1. The client reads the "csrf-token" from a head meta tag. On the server the "csrf-token" is generated and also used to send requests to the server's local GraphQL server. The client has to rely on the rendered meta tag to receive the csrf-token.
+2. The user sends the login details
+ username and password to the **/auth/login** route. The login request does not require a "csrf-token" though because no destructive action can be initiated without being logged in. The Back-end verifies that by checking if a "jwt" cookie is being sent. If the JWT is sent inside the HTTP header the client is not open to CSRF. The "csrf-token" has to be sent when sending the JWT inside a cookie.
+3. The login response sets a "jwt" cookie but also returns the JWT inside a JSON response. The cookie has to be set because this allows the server-side rendering of authenticated routes. Other clients which do not need SSR can instead send the JWT inside the HTTP header and by that do not require the CSRF token which is currently only available when loading a Next.js route which is not needed for mobile apps or other clients.
+
 ### Credits 
 - The nmgn stack uses the following third-party packages:
 	- Apollo Client - The standard GraphQL client library: [Website](https://www.apollographql.com/)
@@ -32,5 +47,4 @@ yarn dev (for development)
 	- Passport - Passport is authentication middleware for Node.js: [Website](http://www.passportjs.org/)
 	- type-graphql - TypeScript GraphQL framework: [Website](https://typegraphql.ml/) 
 	- typegoose - Define Mongoose models using TypeScript classes: [Website](https://github.com/typegoose/typegoose) 
-	- asd	
 - If any package or notice is missing please contact me.
