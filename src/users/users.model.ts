@@ -9,7 +9,7 @@ import { Document } from 'mongoose';
 @ObjectType()
 export class User extends Document {
   @Field(type => ID)
-  userId!: string|number;
+  _id!: string|number;
 
   @Field()
   username!: string;

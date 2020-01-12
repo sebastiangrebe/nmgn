@@ -20,7 +20,7 @@ import { ConfigModule, ConfigService } from '@nestjs/config';
         uri: configService.get<string>('DATABASE_URL'),
         useNewUrlParser: true,
         useUnifiedTopology: true,
-        dbName: configService.get<string>('DATABASE_NAME')
+        dbName: configService.get<string>('DATABASE_NAME') // @todo check if dbName is required or handled within DB URI
       }),
       inject: [ConfigService],
     }),
