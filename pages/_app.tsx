@@ -1,6 +1,6 @@
 import React from 'react';
 import Head from 'next/head'
-import { RequestType } from '../types/request.type';
+import { RequestType } from '../src/types/request.type';
 import DefaultApp from 'next/app';
 import { NextComponentType, NextPageContext } from 'next';
 import { ApolloProvider } from '@apollo/react-hooks';
