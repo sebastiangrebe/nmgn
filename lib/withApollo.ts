@@ -19,12 +19,13 @@ export default withApollo(
             }
         }
         return new ApolloClient({
+            ssrMode: true,
             cache: new InMemoryCache().restore(initialState || {}),
             link: new HttpLink({
-                uri: (isBrowser) ? '/graphql' : 'http://localhost:' + (process.env.PORT || 3000),
+                uri: (isBrowser) ? '/graphql' : 'http://localhost:' + (process.env.PORT || 3000) + '/graphql',
                 credentials: 'include',  // use 'same-origin' if it is appropriate for your case
                 headers: { 'X-CSRF-TOKEN': csrfToken },
-            })
+            }),
         })
     }
 )

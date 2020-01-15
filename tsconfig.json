@@ -33,9 +33,9 @@
     "isolatedModules": true
   },
   "include": [
-    "./pages/**/*",
-    "./src/**/*",
-    "./ui/**/*"
+    "next-env.d.ts",
+    "**/*.ts",
+    "**/*.tsx"
   ],
   "exclude": [
     "node_modules"

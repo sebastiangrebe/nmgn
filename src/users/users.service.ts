@@ -10,4 +10,8 @@ export class UsersService {
   async findOne(username: string): Promise<User | null> {
     return this.userModel.findOne({username: username}).lean();
   }
+
+  async create(user: User) {
+    return this.userModel.create(user);
+  }
 }

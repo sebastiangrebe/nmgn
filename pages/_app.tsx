@@ -5,6 +5,7 @@ import DefaultApp from 'next/app';
 import { NextComponentType, NextPageContext } from 'next';
 import { ApolloProvider } from '@apollo/react-hooks';
 import withApollo from '../lib/withApollo';
+import * as css from '../styles/app.scss';
 
 //@todo check if both csrf token element (__NEXT_DATA__ property and HTML meta tag) are required
 //@todo check if getInitialProps slows down page speed and disables static optimization completely
@@ -30,7 +31,7 @@ class App extends DefaultApp<{
   render() {
     const { Component, pageProps, csrfToken, apollo } = this.props;
     return (
-      <div>
+      <div id={css.app}>
         <Head>
           <meta name="csrf-token" content={csrfToken}/>
         </Head>

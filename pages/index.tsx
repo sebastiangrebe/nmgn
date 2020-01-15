@@ -1,88 +1,110 @@
 import * as React from 'react';
-import Head from 'next/head';
+import { Formik, Form, Field, ErrorMessage } from "formik";
+import * as Yup from "yup";
+import * as css from '../styles/app.scss';
 import Nav from '../components/nav';
 
-const Home = () => (
-  <div>
-    <Head>
-      <title>Home</title>
-      <link rel="icon" href="/favicon.ico" />
-    </Head>
+const LoginSchema = Yup.object().shape({
+  email: Yup.string()
+    .email("Invalid email address format")
+    .required("Email is required"),
+  password: Yup.string()
+    .min(3, "Password must be 3 characters at minimum")
+    .required("Password is required")
+});
 
-    <Nav />
+class Login extends React.Component {
+  submit(email: string, password: string, setSubmitting: Function) {
+    setSubmitting(false);
+    var data = JSON.stringify({"username":email,"password":password});
 
-    <div className="hero">
-      <h1 className="title">Welcome to Next.js!</h1>
-      <p className="description">
-        To get started, edit <code>pages/index.js</code> and save to reload.
-      </p>
+    var xhr = new XMLHttpRequest();
+    xhr.withCredentials = true;
 
-      <div className="row">
-        <a href="https://nextjs.org/docs" className="card">
-          <h3>Documentation &rarr;</h3>
-          <p>Learn more about Next.js in the documentation.</p>
-        </a>
-        <a href="https://nextjs.org/learn" className="card">
-          <h3>Next.js Learn &rarr;</h3>
-          <p>Learn about Next.js by following an interactive tutorial!</p>
-        </a>
-        <a
-          href="https://github.com/zeit/next.js/tree/master/examples"
-          className="card"
-        >
-          <h3>Examples &rarr;</h3>
-          <p>Find other example boilerplates on the Next.js GitHub.</p>
-        </a>
+    xhr.addEventListener("readystatechange", function() {
+      if(this.readyState === 4) {
+        console.log(this.responseText);
+      }
+    });
+
+    xhr.open("POST", "/auth/login");
+    xhr.setRequestHeader("Content-Type", "application/json");
+    const element = document.head.querySelector('meta[name="csrf-token"]') as HTMLMetaElement;
+    if(element) {
+      xhr.setRequestHeader("csrf-token", element.content);
+    }
+
+    xhr.send(data);
+  }
+  render() {
+    return (
+      <div className={css.container}>
+        <Nav />
+        <div className={`${css['row']} ${css['mb-5']}`}>
+          <div className={`${css['col-lg-12']} ${css['text-center']}`}>
+            <h1 className={css['mt-5']}>Login Form</h1>
+          </div>
+        </div>
+        <div className={css.row}>
+          <div className={css['col-lg-12']}>
+            <Formik
+              initialValues={{ email: "", password: "" }}
+              validationSchema={LoginSchema}
+              onSubmit={({ email, password }, {setSubmitting}) => {
+                this.submit(email, password, setSubmitting);
+              }}
+            >
+              {({ touched, errors, isSubmitting }) => (
+                <Form>
+                  <div className={css['form-group']}>
+                    <label htmlFor="email">Email</label>
+                    <Field
+                      type="email"
+                      name="email"
+                      placeholder="Enter email"
+                      className={`${css['form-control']} ${
+                        touched.email && errors.email ? "is-invalid" : ""
+                      }`}
+                    />
+                    <ErrorMessage
+                      component="div"
+                      name="email"
+                      className="invalid-feedback"
+                    />
+                  </div>
+
+                  <div className={css['form-group']}>
+                    <label htmlFor="password">Password</label>
+                    <Field
+                      type="password"
+                      name="password"
+                      placeholder="Enter password"
+                      className={`${css['form-control']} ${
+                        touched.password && errors.password ? "is-invalid" : ""
+                      }`}
+                    />
+                    <ErrorMessage
+                      component="div"
+                      name="password"
+                      className={css['invalid-feedback']}
+                    />
+                  </div>
+
+                  <button
+                    type="submit"
+                    className={`${css['btn']} ${css['btn-primary']} ${css['btn-block']}`}
+                    disabled={isSubmitting}
+                  >
+                    {isSubmitting ? "Please wait..." : "Submit"}
+                  </button>
+                </Form>
+              )}
+            </Formik>
+          </div>
+        </div>
       </div>
-    </div>
+    );
+  }
+}
 
-    <style jsx>{`
-      .hero {
-        width: 100%;
-        color: #333;
-      }
-      .title {
-        margin: 0;
-        width: 100%;
-        padding-top: 80px;
-        line-height: 1.15;
-        font-size: 48px;
-      }
-      .title,
-      .description {
-        text-align: center;
-      }
-      .row {
-        max-width: 880px;
-        margin: 80px auto 40px;
-        display: flex;
-        flex-direction: row;
-        justify-content: space-around;
-      }
-      .card {
-        padding: 18px 18px 24px;
-        width: 220px;
-        text-align: left;
-        text-decoration: none;
-        color: #434343;
-        border: 1px solid #9b9b9b;
-      }
-      .card:hover {
-        border-color: #067df7;
-      }
-      .card h3 {
-        margin: 0;
-        color: #067df7;
-        font-size: 18px;
-      }
-      .card p {
-        margin: 0;
-        padding: 12px 0 0;
-        font-size: 13px;
-        color: #333;
-      }
-    `}</style>
-    </div>
-)
-
-export default Home
+export default Login
