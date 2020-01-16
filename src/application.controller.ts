@@ -18,6 +18,11 @@ export class AppController {
     return { name };
   }
 
+  // Landing page
+  @Render('login')
+  @Get('login')
+  public loginPage() {}
+
   // Authentication will use REST as it is more common and usable by third parties clients than GraphQL
   @UseGuards(AuthGuard('local'))
   @Post('auth/login')

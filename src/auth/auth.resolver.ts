@@ -14,4 +14,15 @@ export class AuthResolver {
   ) {
     return user;
   }
+
+  // Retrieve currently logged in user
+  @Query(() => User)
+  @UseGuards(GqlAuthGuard)
+  async currentUsert(@CurrentUser() user: User
+  ) {
+    return {
+      username: "asd",
+      _id:"asasd"
+    };
+  }
 }

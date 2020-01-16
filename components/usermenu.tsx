@@ -14,10 +14,6 @@ const GET_CURRENTUSER = gql`
 
 const UserMenu = () => {
     const { loading, error, data } = useQuery(GET_CURRENTUSER);
-    if(typeof error !== 'undefined') {
-        console.log("alds");
-        console.log(error.message);
-    }
     if (loading) return <div className={css.usermenu}>Loading...</div>;
     if (error) return <div className={css.usermenu}>`Error! ${error.message}`</div>;
 
