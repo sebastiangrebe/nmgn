@@ -33,9 +33,7 @@ class Login extends React.Component {
       return response.json();
     }).then(function(result) {
       setSubmitting(false);
-      console.log(result);
       if(result && result.access_token) {
-        console.log(result.access_token)
         Router.push('/');
       }
     });
