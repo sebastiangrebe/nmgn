@@ -33,7 +33,7 @@ class App extends DefaultApp<{
     return (
       <div id={css.app}>
         <Head>
-          <meta name="csrf-token" content={csrfToken}/>
+          <meta name="X-CSRF-TOKEN" content={csrfToken}/>
         </Head>
         <ApolloProvider client={apollo}>
           <Component {...pageProps} />

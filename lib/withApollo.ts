@@ -45,7 +45,7 @@ export default withApollo(
                 new HttpLink({
                     uri: (isBrowser) ? '/graphql' : 'http://localhost:' + (process.env.PORT || 3000) + '/graphql',
                     credentials: 'include',  // use 'same-origin' if it is appropriate for your case
-                    headers: (ctx && ctx.req && ctx.req.headers.cookie) ? { 'X-CSRF-TOKEN': csrfToken, cookies: ctx.req.headers.cookie } : { 'X-CSRF-TOKEN': csrfToken },
+                    headers: (ctx && ctx.req && ctx.req.headers.cookie) ? { 'X-CSRF-TOKEN': csrfToken, Cookie: ctx.req.headers.cookie } : { 'X-CSRF-TOKEN': csrfToken },
                 }),
             ]),
         })

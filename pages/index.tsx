@@ -9,7 +9,7 @@ class Index extends React.Component {
         <Nav />
         <div className={`${css['row']} ${css['mb-5']}`}>
           <div className={`${css['col-lg-12']} ${css['text-center']}`}>
-            <h1 className={css['mt-5']}>Login Form</h1>
+            <h1 className={css['mt-5']}>Index page with user</h1>
           </div>
         </div>
         <div className={css.row}>

@@ -3,6 +3,7 @@ import { Formik, Form, Field, ErrorMessage } from "formik";
 import * as Yup from "yup";
 import * as css from '../styles/app.scss';
 import Nav from '../components/nav';
+import Router from 'next/router'
 
 const LoginSchema = Yup.object().shape({
   email: Yup.string()
@@ -15,27 +16,29 @@ const LoginSchema = Yup.object().shape({
 
 class Login extends React.Component {
   submit(email: string, password: string, setSubmitting: Function) {
-    setSubmitting(false);
-    var data = JSON.stringify({"username":email,"password":password});
-
-    var xhr = new XMLHttpRequest();
-    xhr.withCredentials = true;
-
-    xhr.addEventListener("readystatechange", function() {
-      if(this.readyState === 4) {
-        console.log(this.responseText);
+    const data = JSON.stringify({"username":email,"password":password});
+    const element = document.head.querySelector('meta[name="X-CSRF-TOKEN"]') as HTMLMetaElement;
+    const rawHeaders: Headers | string[][] | Record<string, string> | undefined = {
+      'Content-Type': 'application/json'
+    };
+    if(element) {
+      rawHeaders['csrf-token'] = element.content;
+    }
+    const headers = new Headers(rawHeaders);
+    fetch('/auth/login', {
+      method: 'post',
+      body: data,
+      headers
+    }).then(function(response) {
+      return response.json();
+    }).then(function(result) {
+      setSubmitting(false);
+      console.log(result);
+      if(result && result.access_token) {
+        console.log(result.access_token)
+        Router.push('/');
       }
     });
-
-    xhr.open("POST", "/auth/login");
-    xhr.setRequestHeader("Content-Type", "application/json");
-    const element = document.head.querySelector('meta[name="csrf-token"]') as HTMLMetaElement;
-    console.log(element);
-    if(element) {
-      xhr.setRequestHeader("csrf-token", element.content);
-    }
-
-    xhr.send(data);
   }
   render() {
     return (

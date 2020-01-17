@@ -31,7 +31,7 @@ export class AppController {
     const ttl = (this.configService.get<number>('JWT_TTL') || 3600) * 1000;
     const cookieOptions =  {
       maxAge: ttl,
-    //  httpOnly: true,
+      httpOnly: process.env.NODE_ENV === 'production',
       secure: process.env.NODE_ENV === 'production'
     };
     res.cookie('jwt', (await login).access_token, cookieOptions);

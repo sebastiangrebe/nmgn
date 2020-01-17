@@ -16,9 +16,9 @@ const UserMenu = () => {
     const { loading, error, data } = useQuery(GET_CURRENTUSER);
     if (loading) return <div className={css.usermenu}>Loading...</div>;
     if (error) return <div className={css.usermenu}>`Error! ${error.message}`</div>;
-
+    const { currentUser: { username } } = data;
     return (
-        <div className={css.usermenu}></div>
+        <div className={css.usermenu}>{username}</div>
     );
 }
 
